@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { HouseLine, Trash } from "phosphor-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, TouchableOpacity, View } from "react-native";
 import Animated, {
   LinearTransition,
@@ -20,6 +20,8 @@ export function History() {
   const [isLoading, setIsLoading] = useState(true);
   const [history, setHistory] = useState<HistoryProps[]>([]);
 
+  const swipeableRefs = useRef<Swipeable[]>([]);
+
   const { goBack } = useNavigation();
 
   async function fetchHistory() {
@@ -29,18 +31,29 @@ export function History() {
   }
 
   async function remove(id: string) {
-    await historyRemove(id);
+    setTimeout(async () => {
+      await historyRemove(id);
 
-    fetchHistory();
+      fetchHistory();
+    }, 500);
   }
 
   function handleRemove(id: string) {
     Alert.alert("Remover", "Deseja remover esse registro?", [
       {
         text: "Sim",
-        onPress: () => remove(id),
+        onPress: () => {
+          swipeableRefs.current?.[Number(id)].close();
+          remove(id);
+        },
       },
-      { text: "Não", style: "cancel" },
+      {
+        text: "Não",
+        style: "cancel",
+        onPress: () => {
+          swipeableRefs.current?.[Number(id)].close();
+        },
+      },
     ]);
   }
 
@@ -69,9 +82,15 @@ export function History() {
           <Animated.View
             key={item.id}
             layout={LinearTransition.springify()}
-            exiting={SlideOutLeft.delay(100)}
+            exiting={SlideOutLeft}
           >
             <Swipeable
+              ref={(ref) => {
+                if (ref) {
+                  swipeableRefs.current[Number(item.id)] = ref;
+                }
+              }}
+              overshootRight={false}
               containerStyle={styles.swipeable}
               renderRightActions={() => (
                 <TouchableOpacity
@@ -81,7 +100,6 @@ export function History() {
                   <Trash size={32} color={THEME.COLORS.GREY_100} />
                 </TouchableOpacity>
               )}
-              overshootRight={false}
             >
               <HistoryCard data={item} />
             </Swipeable>
