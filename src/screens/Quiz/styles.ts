@@ -7,9 +7,10 @@ export const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.GREY_800,
   },
   question: {
+    flexGrow: 1,
     alignItems: 'center',
     paddingTop: 80,
-    paddingBottom: 300,
+    paddingBottom: 64,
     padding: 32,
   },
   footer: {
