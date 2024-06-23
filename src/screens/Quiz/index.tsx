@@ -24,11 +24,11 @@ import { historyAdd } from "../../storage/quizHistoryStorage";
 import { ConfirmButton } from "../../components/ConfirmButton";
 import { Loading } from "../../components/Loading";
 import { OutlineButton } from "../../components/OutlineButton";
+import OverlayFeedback from "../../components/OverlayFeedback";
 import { ProgressBar } from "../../components/ProgressBar";
 import { Question } from "../../components/Question";
 import { QuizHeader } from "../../components/QuizHeader";
 import { THEME } from "../../styles/theme";
-import OverlayFeedback from "../../components/OverlayFeedback";
 
 interface Params {
   id: string;
@@ -61,7 +61,12 @@ export function Quiz() {
   function shakeAnimation() {
     shake.value = withSequence(
       withTiming(3, { duration: 400, easing: Easing.bounce }),
-      withTiming(0)
+      withTiming(0, undefined, (finished) => {
+        "worklet";
+        if (finished) {
+          runOnJS(handleNextQuestion)();
+        }
+      })
     );
   }
 
@@ -262,6 +267,7 @@ export function Quiz() {
               question={quiz.questions[currentQuestion]}
               alternativeSelected={alternativeSelected}
               setAlternativeSelected={setAlternativeSelected}
+              onUnmount={() => setStatusReply(0)}
             />
           </Animated.View>
         </GestureDetector>
