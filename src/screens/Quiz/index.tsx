@@ -28,6 +28,7 @@ import { ProgressBar } from "../../components/ProgressBar";
 import { Question } from "../../components/Question";
 import { QuizHeader } from "../../components/QuizHeader";
 import { THEME } from "../../styles/theme";
+import OverlayFeedback from "../../components/OverlayFeedback";
 
 interface Params {
   id: string;
@@ -226,6 +227,8 @@ export function Quiz() {
 
   return (
     <View style={styles.container}>
+      <OverlayFeedback status={0} />
+
       <Animated.View style={fixedProgressBarStyles}>
         <Text style={styles.title}>{quiz.title}</Text>
 
