@@ -5,6 +5,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { styles } from "./styles";
 
+import { Audio } from "expo-av";
+import * as Haptics from "expo-haptics";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
@@ -29,7 +31,6 @@ import { ProgressBar } from "../../components/ProgressBar";
 import { Question } from "../../components/Question";
 import { QuizHeader } from "../../components/QuizHeader";
 import { THEME } from "../../styles/theme";
-import { Audio } from "expo-av";
 
 interface Params {
   id: string;
@@ -59,7 +60,9 @@ export function Quiz() {
   const scrollY = useSharedValue(0);
   const cardPosition = useSharedValue(0);
 
-  function shakeAnimation() {
+  async function shakeAnimation() {
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+
     shake.value = withSequence(
       withTiming(3, { duration: 400, easing: Easing.bounce }),
       withTiming(0, undefined, (finished) => {
