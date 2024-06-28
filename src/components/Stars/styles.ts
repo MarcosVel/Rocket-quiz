@@ -5,4 +5,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  canvas: {
+    width: 257,
+    height: 249,
+    position: "absolute",
+    zIndex: 1,
+  },
 });
