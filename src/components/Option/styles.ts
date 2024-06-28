@@ -12,6 +12,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
     marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
   title: {
     color: THEME.COLORS.GREY_100,
