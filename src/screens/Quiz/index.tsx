@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Alert, Platform, Text, View } from "react-native";
+import { Alert, BackHandler, Platform, Text, View } from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { styles } from "./styles";
 
+import { Audio } from "expo-av";
+import * as Haptics from "expo-haptics";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
@@ -58,7 +60,9 @@ export function Quiz() {
   const scrollY = useSharedValue(0);
   const cardPosition = useSharedValue(0);
 
-  function shakeAnimation() {
+  async function shakeAnimation() {
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+
     shake.value = withSequence(
       withTiming(3, { duration: 400, easing: Easing.bounce }),
       withTiming(0, undefined, (finished) => {
@@ -155,10 +159,25 @@ export function Quiz() {
     };
   });
 
+  async function playSound(isCorrect: boolean) {
+    const file = isCorrect
+      ? require("../../assets/correct.mp3")
+      : require("../../assets/wrong.mp3");
+
+    const { sound } = await Audio.Sound.createAsync(file, { shouldPlay: true });
+
+    await sound.setPositionAsync(0);
+    await sound.playAsync();
+  }
+
   function handleSkipConfirm() {
     Alert.alert("Pular", "Deseja realmente pular a questão?", [
-      { text: "Sim", onPress: () => handleNextQuestion() },
-      { text: "Não", onPress: () => {} },
+      { text: "Não", style: "cancel" },
+      {
+        text: "Sim",
+        style: "destructive",
+        onPress: () => handleNextQuestion(),
+      },
     ]);
   }
 
@@ -191,9 +210,11 @@ export function Quiz() {
     }
 
     if (quiz.questions[currentQuestion].correct === alternativeSelected) {
-      setStatusReply(1);
       setPoints((prevState) => prevState + 1);
+      await playSound(true);
+      setStatusReply(1);
     } else {
+      await playSound(false);
       setStatusReply(2);
       shakeAnimation();
     }
@@ -228,6 +249,15 @@ export function Quiz() {
       handleNextQuestion();
     }
   }, [points]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleStop
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   if (isLoading) {
     return <Loading />;
