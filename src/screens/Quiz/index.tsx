@@ -172,8 +172,12 @@ export function Quiz() {
 
   function handleSkipConfirm() {
     Alert.alert("Pular", "Deseja realmente pular a questão?", [
-      { text: "Sim", onPress: () => handleNextQuestion() },
-      { text: "Não", onPress: () => {} },
+      { text: "Não", style: "cancel" },
+      {
+        text: "Sim",
+        style: "destructive",
+        onPress: () => handleNextQuestion(),
+      },
     ]);
   }
 

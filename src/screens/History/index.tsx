@@ -42,6 +42,7 @@ export function History() {
     Alert.alert("Remover", "Deseja remover esse registro?", [
       {
         text: "Sim",
+        style: "destructive",
         onPress: () => {
           swipeableRefs.current?.[Number(id)].close();
           remove(id);
