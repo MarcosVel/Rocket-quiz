@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
   history: {
     flexGrow: 1,
     paddingVertical: 32,
+    gap: 12,
   },
   swipeable: {
     paddingHorizontal: 32,
