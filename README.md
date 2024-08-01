@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/static/v1?label=Rocketseat&message=Education&color=8257e5&labelColor=202024" alt="Rocketseat Project" />
 </p>
 
-## 💻 Projeto
+## 💻 Project
 
 IgniteQuiz is an engaging and interactive quiz application built using React Native and Expo. It offers a seamless experience across multiple platforms, including Android and iOS. The app leverages a variety of libraries and tools to ensure **smooth animations**, secure data storage, and intuitive navigation.
 
