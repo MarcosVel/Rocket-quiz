@@ -42,8 +42,8 @@ IgniteQuiz is an engaging and interactive quiz application built using React Nat
 1. **Clone the repository**:
 
    ```sh
-   git clone https://github.com/yourusername/ignitequiz.git
-   cd ignitequiz
+   git clone https://github.com/MarcosVel/Rocket-quiz.git
+   cd Rocket-quiz
    ```
 
 2. **Install dependencies**:
